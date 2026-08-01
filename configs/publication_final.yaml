@@ -1,0 +1,86 @@
+seed: 42
+
+pv:
+  count: 3
+  unit_capacity_mw: 1.0
+
+stochastic_pv:
+  enabled: true
+  # Two-year 2019-2020 hourly PVGIS PV output for Istanbul.
+  training_csv: duckcurve/data/PVGIS_hourly_PV.csv
+  scenario_count: 24
+  seed: 2042
+  variance_retained: 0.95
+  synthetic_training_days: 365
+  synthetic_variability: 0.18
+  cvar_alpha: 0.90
+  cvar_weight: 0.10
+
+restoration_objective:
+  enabled: true
+  # Common-random-number outage bank evaluated inside MO-EZOA.
+  scenario_count: 64
+  seed: 32021
+  critical_service_threshold: 0.95
+  cvar_alpha: 0.95
+  cvar_weight: 0.25
+
+bess:
+  count: 3
+  total_power_mw: 3.0
+  total_energy_mwh: 9.0
+  efficiency_charge: 0.95
+  efficiency_discharge: 0.95
+
+horizon:
+  hours: 24
+
+objectives:
+  include_losses_in_net_load: true
+
+voltage:
+  minimum_pu: 0.94
+  maximum_pu: 1.05
+
+cvar_constraint:
+  # ENS is retained as a diagnostic, not a design-selection criterion.
+  enabled: false
+  alpha: 0.95
+  max_ratio_to_no_der: 0.80
+  screening_scenarios: 5000
+  screening_seed: 12021
+  duration_distribution: "exponential"
+  load_sigma: 0.05
+  pv_sigma: 0.10
+
+ezoa:
+  population_size: 80
+  iterations: 155
+  archive_size_cap: 100
+  obl_init: true
+  defense_step: 0.15
+  tradeoff_accept_prob: 0.35
+  # Disabled for the preregistered comparison: adaptive polishing otherwise
+  # produces unequal expensive-evaluation counts across stochastic seeds.
+  primary_elite_trials: 0
+  primary_elite_step: 0.20
+  n_seeds: 10
+  seeds: [42, 1042, 2042, 3042, 4042, 5042, 6042, 7042, 8042, 9042]
+
+reliability_mcs:
+  enabled: true
+  scenario_count: 100000
+  seed: 2021
+  duration_distribution: "exponential"
+  load_sigma: 0.05
+  pv_sigma: 0.10
+  maximum_duration_hours: 72.0
+
+publication:
+  constraint_tolerance: 1.0e-5
+  # OBL: 2N, initial population: N, two phases per iteration: 2*N*iterations.
+  expected_evaluations_per_seed: 25040
+  require_supported_reliability_improvement: false
+
+output:
+  formats: ["png", "pdf"]

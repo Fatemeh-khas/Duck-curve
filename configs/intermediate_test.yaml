@@ -1,0 +1,67 @@
+seed: 42
+
+pv:
+  count: 3
+  unit_capacity_mw: 1.0
+
+stochastic_pv:
+  enabled: true
+  # Set training_csv to a file with one normalized 24-hour profile per row.
+  # Empty means the clearly identified synthetic-training fallback is used.
+  training_csv: duckcurve/data/PVGIS_hourly_PV.csv
+  scenario_count: 6
+  seed: 2042
+  variance_retained: 0.95
+  synthetic_training_days: 365
+  synthetic_variability: 0.18
+  cvar_alpha: 0.90
+  cvar_weight: 0.10
+
+restoration_objective:
+  enabled: true
+  scenario_count: 16
+  seed: 32021
+  critical_service_threshold: 0.95
+  cvar_alpha: 0.95
+  cvar_weight: 0.25
+
+bess:
+  count: 3
+  total_power_mw: 3.0
+  total_energy_mwh: 9.0
+  efficiency_charge: 0.95
+  efficiency_discharge: 0.95
+
+horizon:
+  hours: 24
+
+objectives:
+  include_losses_in_net_load: true
+
+ezoa:
+  population_size: 30
+  iterations: 50
+  archive_size_cap: 60
+  obl_init: true
+  defense_step: 0.15
+  tradeoff_accept_prob: 0.35
+  # Disabled so every optimizer seed receives exactly the same evaluation budget.
+  primary_elite_trials: 0
+  primary_elite_step: 0.20
+  n_seeds: 3
+  seeds: [42, 1042, 2042]
+
+voltage:
+  minimum_pu: 0.94
+  maximum_pu: 1.05
+
+reliability_mcs:
+  enabled: true
+  scenario_count: 10000
+  seed: 2021
+  duration_distribution: exponential
+  load_sigma: 0.05
+  pv_sigma: 0.10
+  maximum_duration_hours: 72.0
+output:
+  formats: ["png"]

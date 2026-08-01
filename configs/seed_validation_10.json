@@ -1,0 +1,26 @@
+{
+  "seed": 42,
+  "pv": {"count": 3, "unit_capacity_mw": 1.0},
+  "bess": {
+    "count": 3,
+    "total_power_mw": 3.0,
+    "total_energy_mwh": 9.0,
+    "efficiency_charge": 0.95,
+    "efficiency_discharge": 0.95
+  },
+  "horizon": {"hours": 24},
+  "objectives": {"include_losses_in_net_load": true},
+  "ezoa": {
+    "population_size": 6,
+    "iterations": 4,
+    "archive_size_cap": 40,
+    "obl_init": true,
+    "defense_step": 0.15,
+    "tradeoff_accept_prob": 0.35,
+    "primary_elite_trials": 20,
+    "primary_elite_step": 0.20,
+    "n_seeds": 10,
+    "seeds": [42, 1042, 2042, 3042, 4042, 5042, 6042, 7042, 8042, 9042]
+  },
+  "output": {"formats": ["png", "pdf"]}
+}

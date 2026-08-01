@@ -1,0 +1,74 @@
+seed: 42
+
+pv:
+  count: 3
+  unit_capacity_mw: 1.0
+
+stochastic_pv:
+  enabled: true
+  training_csv: duckcurve/data/PVGIS_hourly_PV.csv
+  scenario_count: 12
+  seed: 2042
+  variance_retained: 0.95
+  synthetic_training_days: 365
+  synthetic_variability: 0.18
+  cvar_alpha: 0.90
+  cvar_weight: 0.10
+
+restoration_objective:
+  enabled: true
+  scenario_count: 32
+  seed: 32021
+  critical_service_threshold: 0.95
+  cvar_alpha: 0.95
+  cvar_weight: 0.25
+
+bess:
+  count: 3
+  total_power_mw: 3.0
+  total_energy_mwh: 9.0
+  efficiency_charge: 0.95
+  efficiency_discharge: 0.95
+
+horizon:
+  hours: 24
+
+objectives:
+  include_losses_in_net_load: true
+
+reliability_mcs:
+  enabled: true
+  scenario_count: 20000
+  seed: 2021
+  # The paper gives mean repair times, not a probability distribution.
+  # "exponential" is therefore an analyst assumption recorded in the report.
+  duration_distribution: "exponential"
+  load_sigma: 0.05
+  pv_sigma: 0.10
+  maximum_duration_hours: 72.0
+
+ezoa:
+  population_size: 80
+  iterations: 155
+  archive_size_cap: 100
+  obl_init: true
+  # Generic search-exploration knobs (not objective weights -- they change how
+  # hard/well EZOA searches, not what it's rewarded for finding).
+  # NOTE: an attempt to tune these on a cheap small-scale test (pop=30/iter=50)
+  # picked defense_step=0.4/tradeoff_accept_prob=0.15 as "best", but that combo
+  # performed WORSE at full scale (pop=80/iter=155) than these defaults. Any
+  # further tuning should be validated at (or near) full scale, not on a cheap
+  # proxy run.
+  defense_step: 0.15
+  tradeoff_accept_prob: 0.35
+  primary_elite_trials: 20
+  primary_elite_step: 0.20
+  # Number of independent seeds to run. Each seed is retained for statistical
+  # reporting, and archives are merged for overall plots/results. Seeds default
+  # to seed, seed+1000, seed+2000, ... . Single-seed runs on
+  # this problem have been observed to vary by >30% in best SSS purely from
+  # RNG, so more than 1 is recommended for anything going in the paper.
+  n_seeds: 3
+
+output:
+  formats: ["png", "pdf"]

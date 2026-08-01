@@ -1,0 +1,12 @@
+cff-version: 1.2.0
+message: "If you use this software, cite the archived release and associated paper."
+title: "IEEE 33-bus PV-BESS Duck-Curve and Reliability Study"
+type: software
+version: 1.2.1
+date-released: 2026-07-26
+authors:
+  - name: "Duckcurve project contributors"
+license: MIT
+abstract: >-
+  Reproducible multi-seed MO-EZOA planning, feeder analysis, and paired
+  Monte Carlo reliability assessment for PV and BESS on the IEEE 33-bus feeder.
