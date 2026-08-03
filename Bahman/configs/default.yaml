@@ -1,0 +1,160 @@
+seed: 42
+
+pv:
+  count: 3
+  unit_capacity_mw: 1.0
+
+stochastic_pv:
+  enabled: true
+  training_csv: duckcurve/data/PVGIS_hourly_PV.csv
+  scenario_count: 12
+  seed: 2042
+  variance_retained: 0.95
+  synthetic_training_days: 365
+  synthetic_variability: 0.18
+  cvar_alpha: 0.90
+  cvar_weight: 0.10
+
+restoration_objective:
+  enabled: true
+  scenario_count: 32
+  seed: 32021
+  critical_service_threshold: 0.95
+  cvar_alpha: 0.95
+  cvar_weight: 0.25
+
+bess:
+  count: 3
+  total_power_mw: 3.0
+  total_energy_mwh: 9.0
+  efficiency_charge: 0.95
+  efficiency_discharge: 0.95
+
+horizon:
+  hours: 24
+
+objectives:
+  include_losses_in_net_load: true
+
+reliability_mcs:
+  enabled: true
+  scenario_count: 20000
+  seed: 2021
+  # The paper gives mean repair times, not a probability distribution.
+  # "exponential" is therefore an analyst assumption recorded in the report.
+  duration_distribution: "exponential"
+  load_sigma: 0.05
+  pv_sigma: 0.10
+  maximum_duration_hours: 72.0
+
+optimizer_defaults:
+  population_size: 80
+  iterations: 50 #155
+  archive_size_cap: 100
+  primary_elite_trials: 20
+  primary_elite_step: 0.20
+  n_seeds: 1
+
+ezoa:
+  obl_init: true
+  # Generic search-exploration knobs (not objective weights -- they change how
+  # hard/well EZOA searches, not what it's rewarded for finding).
+  # NOTE: an attempt to tune these on a cheap small-scale test (pop=30/iter=50)
+  # picked defense_step=0.4/tradeoff_accept_prob=0.15 as "best", but that combo
+  # performed WORSE at full scale (pop=80/iter=155) than these defaults. Any
+  # further tuning should be validated at (or near) full scale, not on a cheap
+  # proxy run.
+  defense_step: 0.15
+  tradeoff_accept_prob: 0.35
+  # Number of independent seeds to run. Each seed is retained for statistical
+  # reporting, and archives are merged for overall plots/results. Seeds default
+  # to seed, seed+1000, seed+2000, ... . Single-seed runs on
+  # this problem have been observed to vary by >30% in best SSS purely from
+  # RNG, so more than 1 is recommended for anything going in the paper.
+
+nsga2:
+  crossover_prob: 0.90
+  eta_crossover: 15.0
+  eta_mutation: 20.0
+
+gde3:
+  differential_weight: 0.50
+  crossover_rate: 0.90
+
+mopso:
+  inertia: 0.55
+  cognitive_coeff: 1.60
+  social_coeff: 1.60
+  mutation_prob: 0.05
+  velocity_clamp: 0.25
+
+moead:
+  neighborhood_size: 15
+  differential_weight: 0.55
+  crossover_rate: 0.90
+  neighborhood_mating_prob: 0.90
+
+mowoa:
+  spiral_constant: 1.0
+  grid_count: 10
+  grid_inflation: 0.10
+  selection_pressure: 4.0
+  deletion_pressure: 2.0
+
+moda:
+  neighborhood_scale_min: 0.10
+  neighborhood_scale_max: 1.00
+  delta_clamp: 0.10
+  grid_count: 10
+  grid_inflation: 0.10
+  selection_pressure: 4.0
+  deletion_pressure: 2.0
+
+modhl:
+  leader_pool_size: 10
+  version: "V4"
+  leader_tol_window_pct: 5.0
+  leader_tol_abs: 1.0e-5
+  grid_count: 10
+  grid_inflation: 0.10
+  selection_pressure: 4.0
+  deletion_pressure: 2.0
+
+moalo:
+  grid_count: 10
+  grid_inflation: 0.10
+  selection_pressure: 4.0
+  deletion_pressure: 2.0
+
+momvo:
+  wep_min: 0.20
+  wep_max: 1.00
+  grid_count: 10
+  grid_inflation: 0.10
+  selection_pressure: 4.0
+  deletion_pressure: 2.0
+
+mogoa:
+  c_max: 1.0
+  c_min: 1.0e-4
+  attraction: 0.5
+  length_scale: 1.5
+  grid_count: 10
+  grid_inflation: 0.10
+  selection_pressure: 4.0
+  deletion_pressure: 2.0
+
+mogwo:
+  grid_count: 10
+  grid_inflation: 0.10
+  selection_pressure: 4.0
+  deletion_pressure: 2.0
+
+cmaes:
+  sigma_init: 0.15
+  elite_fraction: 0.35
+  covariance_learning_rate: 0.30
+  mean_learning_rate: 0.70
+
+output:
+  formats: ["png", "pdf"]
